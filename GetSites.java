@@ -28,7 +28,7 @@ public class GetSites extends AppCompatActivity {
         mList = (ListView) findViewById(R.id.sitesList);
         mData = new ArrayList<String>();
         getSitesList();
-        
+
         mAdapter = new ListAdapter(mContext,mData);
         mList.setAdapter(mAdapter);
     }
