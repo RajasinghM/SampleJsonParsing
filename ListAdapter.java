@@ -16,11 +16,13 @@ public class ListAdapter extends BaseAdapter {
 
     Context mContext;
     List<String> mData;
+    List<String> mId;
     LayoutInflater layoutInflater;
 
-    public ListAdapter(Context mContext, List<String> mData){
+    public ListAdapter(Context mContext, List<String> mData, List<String> mId){
         this.mContext = mContext;
         this.mData = mData;
+        this.mId = mId;
         layoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -47,8 +49,9 @@ public class ListAdapter extends BaseAdapter {
         }
 
         TextView tvList = (TextView) mView.findViewById(R.id.tvList);
+        TextView tvId = (TextView) mView.findViewById(R.id.tvId);
         tvList.setText(mData.get(position));
-
+        tvId.setText(mId.get(position));
         return mView;
     }
 }

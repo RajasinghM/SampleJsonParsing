@@ -41,10 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     EditText etUsename, etPassword;
     String uName, pWord;
     Button btLogin;
-    String loginUrl = "http://128.199.65.229:1337/MobileSync/Login";
-    String siteUrl = "http://128.199.65.229:1337/MobileSync/getSites";
     SQLitehelper dbase;
     ProgressDialog mProgress;
+    GetPrefsValue getPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btLogin = (Button) findViewById(R.id.btLogin);
         btLogin.setOnClickListener(this);
         dbase = new SQLitehelper(MainActivity.this);
+        getPrefs = new GetPrefsValue(MainActivity.this);
         mProgress = new ProgressDialog(MainActivity.this);
         mProgress.setCancelable(false);
         mProgress.setMessage("Loading. Please wait...");
@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void getJsonResponse(){
+        String loginUrl = "http://128.199.65.229:1337/MobileSync/Login";
         showProgressDialog();
         uName = etUsename.getText().toString().trim();
         pWord = etPassword.getText().toString().trim();
@@ -82,10 +83,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     String token = jsonObject.getString("token");
                     String status = jsonObject.getString("status");
                     if(status.equalsIgnoreCase("Active")){
-                        SharedPreferences sPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                        SharedPreferences.Editor sEdit = sPrefs.edit();
-                        sEdit.putString("TOKEN",token);
-                        sEdit.commit();
+                        getPrefs.setPrefs("TOKEN",token);
+                        getPrefs.setPrefs("CUSTID",cusId);
                         getStringResponse(token,cusId);
                     }
                 } catch (JSONException e) {
@@ -119,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void getStringResponse(final String token, final String custId){
+        String siteUrl = "http://128.199.65.229:1337/MobileSync/getSites";
         StringRequest strRequest = new StringRequest(Request.Method.POST, siteUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String str) {
